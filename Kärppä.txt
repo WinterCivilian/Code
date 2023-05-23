@@ -1,0 +1,95 @@
+using System;
+
+/*
+ * Kärppä-ohjelma on Richard Dawkinsin kehittämä ajatuskoe, jonka tarkoituksena on osoittaa, että
+ * tarpeeksi monella iteraatiolla voidaan saavuttaa jotain tiettyä. Ohjelma toimii esimerkkinä evoluutiosta.
+ * Esimerkkinä on Shakespearen näytelmästä lause "METHINKS IT IS LIKE A WEASEL". Ohjelmassa luodaan sattumanvaraisesti
+ * tietynpituinen merkkijono, jota sitten muutetaan lisää sattumanvaraisesti. Muutetuille
+ * merkkijonoille annetaan pisteet, ja parhaiten pisteytetyt merkkijonot "otetaan jatkoon" jolloin niitä muutetaan lisää.
+ * Tätä jatketaan, kunnes päästään haluttuun merkkijonoon.
+ * 
+ * Tässä ohjelmassa käytetään Wikipediasta löytyvää algoritmia ohjenuorana.
+ * https://en.wikipedia.org/wiki/Weasel_program
+ * 
+ *  1. Start with a random string of 28 characters.
+    2. Make 100 copies of the string (reproduce).
+    3. For each character in each of the 100 copies, with a probability of 5%, replace (mutate) the character with a new random character.
+    4. Compare each new string with the target string "METHINKS IT IS LIKE A WEASEL", and give each a score (the number of letters in the string that are correct and in the correct position).
+    5. If any of the new strings has a perfect score (28), halt. Otherwise, take the highest scoring string, and go to step 2.
+ * 
+ * HUOM! Tämän ohjelman koodaus on vielä kesken.
+ */
+
+namespace Kärppä
+{
+    class Program
+    {
+
+        // Kirjoitetaan haluttu merkkijono
+        static void Main(string[] args)
+        {
+            string original = "METHINKS IT IS LIKE A WEASEL";
+            Console.WriteLine(original);
+
+        }
+
+        // Esitetään taulukon sisältö
+        /*foreach (var item in taulukko)
+        {
+            Console.WriteLine(item);
+        }*/
+
+
+        public static string[] Uusijono()
+        {
+            Random random_number = new Random();
+
+            // Määrätään, mitkä kirjaimet ovat sallittuja merkkijonossa
+            string setOfCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            // Luodaan merkkijono
+            string randomString = "";
+            for (int i = 0; i < 28; i++)
+            {
+                int index = random_number.Next(0, setOfCharacters.Length - 1);
+                randomString += setOfCharacters[index];
+            }
+
+            // tehdään taulukko
+            string[] taulukko = new string[100];
+
+            for (int i = 0; i < 100; i++)
+            {
+                taulukko[i] = randomString;
+            }
+
+            return taulukko;
+        }
+
+        // Muutetaan taulukon sisältöä 5%n todennäköisyydellä
+        // Jos sattumanvarainen luku on 1 (eli 1 20:stä), vaihdetaan kirjain
+        // Muuten kirjain pidetään samana
+        public static string[] Muuta(string[] taulukko)
+        {
+            Random RandomGen = new Random();
+
+            for (int i = 0; i < taulukko.Length; i++)
+            {
+                for (int j = 0; i < 28; j++)
+                {
+                    string uusi = taulukko[i];
+
+                    int randomArvo20 = RandomGen.Next(1, 20);
+                    if (randomArvo20 < 2)
+                    {
+                        
+                    }
+                }
+            }
+
+            return null;
+
+        }
+
+    }
+}

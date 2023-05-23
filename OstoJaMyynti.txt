@@ -1,0 +1,80 @@
+using System;
+
+
+/*
+ * Ohjelman avulla voidaan selvittää tuotteen otollisin osto- ja myyntipäivä,
+ * kun hinnat tiedetään etukäteen.
+ * Myynti- ja ostopäivä eivät voi olla sama päivä
+ * Verrataan, millä kahdella hinnalla/päivällä on suurin erotus.
+ * Tämä määrittää osto- ja myyntipäivät.
+ */
+namespace OstoMyynti
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Tuotteen hinta peräkkäisinä päivinä
+            // ensimmäisenä päivänä hinta on 2, neljäntenä 48.
+            // taulukko[0] = 2, taulukko[3] = 48, etc.
+            int[] taulukko = {2, 10, 20, 48, 30, 40, 16, 1, 39, 11, 25, 100};
+            int[] toinentaulukko = { 10, 8, 7, 6, 4, 1};
+            int[] kolmastaulukko = {1, 1, 1, 1, 1, 1, 1,};
+            int[] nelostaulukko = {4,8,1,1,1,2};
+            int[] vitostaulukko = { 100, 8 };
+
+            Console.WriteLine(OstojaMyynti(taulukko));
+            Console.WriteLine(OstojaMyynti(toinentaulukko));
+            Console.WriteLine(OstojaMyynti(kolmastaulukko));
+            Console.WriteLine(OstojaMyynti(nelostaulukko));
+            Console.WriteLine(OstojaMyynti(vitostaulukko));
+        }
+        /*
+         * Selvittää osto- ja myyntipäivät
+         */
+        public static (int, int, int) OstojaMyynti (int[] arr)
+        {
+            if (arr.Length < 2) return (0,0,0);
+
+            // Päiviä on oltava vähintään kaksi.
+            // Lähtökohtaisesti ne ovat kaksi ensimmäistä.
+            // Verrataan muihin päiviin ja selvitetään paras pari.
+            int ostopäivä = 1;
+            int myyntipäivä = 2;
+            int erotus = arr[1] - arr[0];
+            int uusierotus;
+
+            // Ostopäivä voi olla mikä tahansa paitsi viimeinen päivä
+            // Käydään mahdolliset ostopäivät läpi
+            // Sisäkkäiset silmukat laskevat tehoa, mutta itse koodi kuitenkin toimii
+            // Seuraava askel olisi miettiä, miten koodi voitaisiin toteuttaa yhdellä silmukalla
+            for (int i = 0; (i < arr.Length - 1); i++)
+            {
+                int osto = arr[i];
+
+                // myyntipäivä ei voi olla ensimmäinen päivä
+                // verrataan jokaista ostopäivää jokaiseen myyntipäivään
+                // Jos uusi erotus on suurempi, kuin yksikään edellinen,
+                // merkitään se suurimmaksi
+                for (int j = (i+1); (j < arr.Length); j++)
+                {
+                    int myynti = arr[j];
+                    uusierotus = myynti - osto;
+                    if (uusierotus > erotus)
+                    {
+                        erotus = uusierotus;
+                        ostopäivä = i + 1;
+                        myyntipäivä = j + 1;
+                    }
+                }
+  
+            }
+
+            // palautetaan erotuksen määrä, ostopäivä ja myyntipäivä
+            // huom. päivien numerointi aloitetaan 1:stä eikä 0:sta.
+            return (erotus, ostopäivä, myyntipäivä);
+        }
+
+
+    }
+}

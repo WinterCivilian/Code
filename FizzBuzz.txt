@@ -1,0 +1,40 @@
+using System;
+
+namespace Fizzbuzz
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            
+            // Tulostetaan "Fizz" joka kolmannella numerolla
+            // Buzz joka viidennellä
+            // FizzBuzz joka viidennellätoista
+            // Muuten tulostetaan itse numero
+            for (int i = 1; i < 501; i++) 
+            {
+                String teksti = "";
+
+                if (i % 3 == 0 && i % 5 == 0)
+                {
+                    teksti += "FizzBuzz";
+                }
+                else if (i % 3 == 0)
+                {
+                    teksti += "Fizz";
+                }
+                else if (i % 5 == 0)
+                {
+                    teksti += "Buzz";
+                }
+                else
+                {
+                    teksti = Convert.ToString(i);
+                }
+
+                Console.WriteLine(teksti);
+            }
+
+        }
+    }
+}
