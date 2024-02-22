@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Text.RegularExpressions;
 
 /*
  * Kärppä-ohjelma on Richard Dawkinsin kehittämä ajatuskoe, jonka tarkoituksena on osoittaa, että
@@ -17,35 +21,32 @@ using System;
     4. Compare each new string with the target string "METHINKS IT IS LIKE A WEASEL", and give each a score (the number of letters in the string that are correct and in the correct position).
     5. If any of the new strings has a perfect score (28), halt. Otherwise, take the highest scoring string, and go to step 2.
  * 
- * HUOM! Tämän ohjelman koodaus on vielä kesken.
  */
 
+//puuttuu numerointi ja arvotus
 namespace Kärppä
 {
     class Program
     {
 
         // Kirjoitetaan haluttu merkkijono
+        // Kutsutaan muita sillä
+        // Käyteään vain kerran
         static void Main(string[] args)
         {
             string original = "METHINKS IT IS LIKE A WEASEL";
-            Console.WriteLine(original);
 
+            Vertaa(Muuta(Kopioi(Uusijono())), original);            
         }
 
-        // Esitetään taulukon sisältö
-        /*foreach (var item in taulukko)
-        {
-            Console.WriteLine(item);
-        }*/
-
-
-        public static string[] Uusijono()
+      // Luodaan uusi merkkijono halutuista merkeistä
+        public static string Uusijono()
         {
             Random random_number = new Random();
 
             // Määrätään, mitkä kirjaimet ovat sallittuja merkkijonossa
-            string setOfCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            // Pitää sisältää myös tyhjä
+            string setOfCharacters = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             // Luodaan merkkijono
             string randomString = "";
@@ -55,41 +56,107 @@ namespace Kärppä
                 randomString += setOfCharacters[index];
             }
 
-            // tehdään taulukko
-            string[] taulukko = new string[100];
+            return randomString;
+        }
+
+
+        //tehdään taulukko ja täytetään se annetulla jonolla
+        public static string[] Kopioi(string mutantti)
+        {
+            string[] mutanttitaulukko = new string[100]; //100
 
             for (int i = 0; i < 100; i++)
             {
-                taulukko[i] = randomString;
+                mutanttitaulukko[i] = mutantti;
             }
 
-            return taulukko;
+            return mutanttitaulukko;
         }
 
         // Muutetaan taulukon sisältöä 5%n todennäköisyydellä
         // Jos sattumanvarainen luku on 1 (eli 1 20:stä), vaihdetaan kirjain
         // Muuten kirjain pidetään samana
+        // Ensimmäinen for-loop on itse taulukon sisällölle
+        // Toinen for-loop on string-jonon kirjaimille
         public static string[] Muuta(string[] taulukko)
         {
             Random RandomGen = new Random();
 
+            Random random_number = new Random();
+            string setOfCharacters = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            string[] uusitaulukko = new string[100];
+
             for (int i = 0; i < taulukko.Length; i++)
             {
-                for (int j = 0; i < 28; j++)
+                string uusijono = taulukko[i];
+                StringBuilder sb = new StringBuilder(uusijono);
+
+                for (int j = 0; j < 28; j++)
                 {
-                    string uusi = taulukko[i];
+                    //char uusikirjain = uusijono[j];
+                    int index = random_number.Next(0, setOfCharacters.Length - 1);
+                    char uusikirjain = setOfCharacters[index];
 
                     int randomArvo20 = RandomGen.Next(1, 20);
                     if (randomArvo20 < 2)
                     {
-                        
+                        sb[j] = uusikirjain;
+                        sb.ToString();
                     }
+
+                    taulukko[i] = sb.ToString();
                 }
             }
-
-            return null;
+            return taulukko;
 
         }
 
+        /*
+         * Verrataan luotuja mutatoituja merkkijonoja alkuperäiseen
+         * Otetaan parhaat pisteet saanut
+         * Jos täydet 28 pistettä, printataan merkkijono ja lopetetaan
+         */
+        public static string Vertaa (string [] taulukko, string original)
+        {
+            int korkein = 0;
+            string paras = "";
+
+            for (int i = 0;i < taulukko.Length; i++)
+            {
+                int valiaikainen = CompareStrings (original, taulukko[i]);
+
+                if (valiaikainen == 28)
+                {
+                    paras = taulukko[i];
+                    Console.WriteLine(paras);
+                    return paras;             
+                }
+
+                if (valiaikainen > korkein) // && korkein < 28
+                {
+                    korkein = valiaikainen;
+                    paras = taulukko[i];
+                    Console.WriteLine(paras); //unhandled exception                   
+                }  
+            }
+          
+            return Vertaa(Muuta(Kopioi(paras)), original);
+        }
+
+        // Verrataan string-jonoja ja annetaan arvosana
+        public static int CompareStrings (string mutantti, string original)
+        {
+            int score = 0;
+
+            for (int i = 0; i < original.Length; i++)
+            {
+                if (mutantti[i] == original[i])
+                {
+                    score += 1;
+                }
+            }
+            return score;
+        }
     }
 }
