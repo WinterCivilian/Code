@@ -137,7 +137,7 @@ namespace Kärppä
                 {
                     korkein = valiaikainen;
                     paras = taulukko[i];
-                    Console.WriteLine(paras); //unhandled exception                   
+                    Console.WriteLine(paras);                  
                 }  
             }
           
